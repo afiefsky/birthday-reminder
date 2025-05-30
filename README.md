@@ -2,7 +2,7 @@
 
 A service that manages user data and sends birthday reminders at 9 AM in users' local timezones.
 
-> **Disclaimer**: This project is closed to only Afief and HubbedIn for Take Home Test. This project is not "blind helped" by AI, meaning that I take responsibility for every single line of code presented in this project. This project is meant to be run locally. If it's to be hosted, it would require further configuration and documentation update.
+> **Disclaimer**: This project is closed to only Afief (Author) and HubbedIn for Take Home Test. This project is not "blind helped" by AI, meaning that I take responsibility for every single line of code presented in this project. This project is meant to be run locally. If it's to be hosted, it would require further configuration and documentation update.
 
 ---
 
@@ -151,16 +151,22 @@ SIMULATED_TIME="2024-05-30T09:00:00+07:00" docker-compose up
 
 ## Design Decisions
 
-1. **Express.js** — Lightweight and flexible
-2. **Mongoose** — ODM for clean schema definitions
-3. **node-cron** — Simple scheduling for the worker
-4. **Docker Compose** — Simplified local setup
-5. **Timezone Handling** — Stored in UTC, converted on runtime
-6. **Worker Behavior**:
+1. **Express.js** – Simple and flexible web framework.
+2. **Mongoose** – ODM for schema and MongoDB access.
+3. **node-cron** – Scheduling for the worker.
+4. **Docker Compose** – Easy local setup.
+5. **Timezone** – Store in UTC, convert at runtime.
+6. **Worker**:
    - Runs every minute
-   - Sends message at exactly 9 AM local time
-   - Avoids duplicate messages
-   - Can run with simulated time for testing
+   - Sends message at 9 AM local time
+   - Avoids duplicates
+   - Supports simulated time for testing
+7. **Code Flow**: `index.js` (+middleware) → routes → controllers → services → models
+8. **Code Rules**:
+   - Routes → only call controllers
+   - Controllers → only call services
+   - Services → contain business logic, can call models and third-party APIs
+   - Models → contain data/domain logic only
 
 ---
 
