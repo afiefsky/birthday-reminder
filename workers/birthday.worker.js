@@ -9,67 +9,77 @@
  * In a real-world setup, this worker would be run as a separate process using a process manager like PM2.
  */
 const cron = require('node-cron');
-const userService = require('../src/services/user.service');
-
-// Keep track of which users have received birthday messages today
-// In several case, this replaced with insert to db, or redis, 
-// or any other storage that keeps track on user that already got their birthday message in a year
-const birthdayMessagesSent = new Set();
+const birthdayMessageService = require('../src/services/birthday-message.service');
 
 const sendBirthdayMessage = async (user) => {
     // In a real application, this would send an email or push notification
     // Example email third-party: Infobip (also handle SMS)
     // Example push notification third-party: Firebase
     // Example WhatsApp third-party: Mekari Qontak
-    // Third-party code should be placed in Services folder, i.e: src/services/infobip.service.js
-    // or: src/services/API/infobip.service.js (so all third party code is in API folder)
     console.log(`🎉 Happy Birthday, ${user.name}! 🎂`);
+    
+    // Simulate potential failure (remove in production)
+    if (Math.random() < 0.2) { // 20% chance of failure
+        throw new Error('Failed to send birthday message');
+    }
 };
 
-const checkBirthdays = async () => {
-    console.log("Begin checkBirthdays");
+const processBirthdayMessages = async () => {
+    console.log("Begin processing birthday messages");
 
     try {
-        // Use the user service to get all users
-        const users = await userService.getAllUsers();
+        // Get all pending messages that are ready for processing
+        const pendingMessages = await birthdayMessageService.getPendingMessages();
         
-        // Use simulated time if provided in environment variable, otherwise use current time
-        const now = process.env.SIMULATED_TIME ? new Date(process.env.SIMULATED_TIME) : new Date();
+        for (const message of pendingMessages) {
+            const user = message.userId;
+            const userNow = new Date(new Date().toLocaleString('en-US', { timeZone: user.timezone }));
 
-        for (const user of users) {
-            const birthday = new Date(user.birthday); // convert user-data from db, to date object
-            const userNow = new Date(now.toLocaleString('en-US', { timeZone: user.timezone })); // this userNow means current-time (or server time, the time that this worker runs) in user's timezone
-
-            // console.log(`Checking user ${user.name}: user birthday ${birthday.toISOString()}, current userDate ${userNow.toISOString()}, hour: ${userNow.getHours()}, minute: ${userNow.getMinutes()}`);
-
-            // Create a unique key for this user and date (meaning if user updated their birthday, it will be a new key)
-            const messageKey = `${user._id}-${userNow.toISOString().split('T')[0]}`;
-
-            // Check if it's the user's birthday and it's exactly 9 AM in their timezone
-            // and they haven't received a message today
-            if (
-                birthday.getMonth() === userNow.getMonth() &&
-                birthday.getDate() === userNow.getDate() &&
-                userNow.getHours() === 9 &&
-                userNow.getMinutes() === 0 &&
-                !birthdayMessagesSent.has(messageKey)
-            ) {
-                console.log(`Sending birthday message to ${user.name}`);
-                await sendBirthdayMessage(user);
-                birthdayMessagesSent.add(messageKey);
+            // Only process if it's 9 AM in the user's timezone
+            if (userNow.getHours() === 9 && userNow.getMinutes() === 0) {
+                try {
+                    await sendBirthdayMessage(user);
+                    await birthdayMessageService.markMessageAsSent(message._id);
+                    console.log(`Successfully sent birthday message to ${user.name}`);
+                } catch (error) {
+                    await birthdayMessageService.markMessageAsFailed(message._id, error);
+                    console.error(`Failed to send birthday message to ${user.name}:`, error.message);
+                }
             }
         }
     } catch (error) {
-        console.error('Error checking birthdays:', error);
+        console.error('Error processing birthday messages:', error);
     }
 
-    console.log("End checkBirthdays");
+    console.log("End processing birthday messages");
+};
+
+const scheduleBirthdayMessages = async () => {
+    console.log("Begin scheduling birthday messages");
+
+    try {
+        // Get users with birthdays today
+        const usersWithBirthdayToday = await birthdayMessageService.getUsersWithBirthdayToday();
+        const currentYear = new Date().getFullYear();
+
+        // Create pending messages for each user
+        for (const user of usersWithBirthdayToday) {
+            await birthdayMessageService.createPendingMessage(user._id, currentYear);
+        }
+    } catch (error) {
+        console.error('Error scheduling birthday messages:', error);
+    }
+
+    console.log("End scheduling birthday messages");
 };
 
 // Main app
 exports.setupBirthdayWorker = () => {
-    // Run every minute to check for birthdays
-    cron.schedule('* * * * *', checkBirthdays);
+    // Schedule new birthday messages at midnight UTC
+    cron.schedule('0 0 * * *', scheduleBirthdayMessages);
+    
+    // Process pending messages every minute
+    cron.schedule('* * * * *', processBirthdayMessages);
     
     console.log('Birthday worker started');
     if (process.env.SIMULATED_TIME) {
