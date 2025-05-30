@@ -134,7 +134,7 @@ Response (200 OK):
 ```json
 {
     "_id": "683948a3a079126a2e0a1e13",
-    "name": "Robert W.S.A",
+    "name": "Robert Wilford",
     "email": "robertwilford@mail.com",
     "birthday": "1991-01-21T00:00:00.000Z",
     "timezone": "Asia/Jakarta",
