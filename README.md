@@ -191,7 +191,7 @@ SIMULATED_TIME="2024-05-30T09:00:00+07:00" docker-compose up
 
 ## Postman Collection
 
-You can use the provided Postman Collection (v2.1) to test the API endpoints easily.
+You can use the provided Postman Collection (v2.1) to test the API endpoints.
 
 ### Steps:
 
