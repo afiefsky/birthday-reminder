@@ -99,12 +99,27 @@ SIMULATED_TIME="2024-05-30T09:00:00+07:00" docker-compose up
 
 ### `POST /api/users` — Create a user
 
+Request:
 ```json
 {
-  "name": "John Doe",
-  "email": "john@example.com",
-  "birthday": "1990-01-01T00:00:00.000Z",
-  "timezone": "America/New_York"
+  "name": "Robert Wilford",
+  "email": "robertwilford@mail.com",
+  "birthday": "1991-01-21",
+  "timezone": "Asia/Jakarta"
+}
+```
+
+Response (201 Created):
+```json
+{
+    "name": "Robert Wilford",
+    "email": "robertwilford@mail.com",
+    "birthday": "1991-01-21T00:00:00.000Z",
+    "timezone": "Asia/Jakarta",
+    "_id": "683948a3a079126a2e0a1e13",
+    "createdAt": "2025-05-30T05:56:51.807Z",
+    "updatedAt": "2025-05-30T05:56:51.807Z",
+    "__v": 0
 }
 ```
 
@@ -115,11 +130,49 @@ SIMULATED_TIME="2024-05-30T09:00:00+07:00" docker-compose up
 
 ### `GET /api/users/:id` — Retrieve a user
 
+Response (200 OK):
+```json
+{
+    "_id": "683948a3a079126a2e0a1e13",
+    "name": "Robert W.S.A",
+    "email": "robertwilford@mail.com",
+    "birthday": "1991-01-21T00:00:00.000Z",
+    "timezone": "Asia/Jakarta",
+    "createdAt": "2025-05-30T05:56:51.807Z",
+    "updatedAt": "2025-05-30T05:57:58.718Z",
+    "__v": 0
+}
+```
+
 - Returns 404 if not found
 
 ---
 
 ### `PUT /api/users/:id` — Update a user
+
+Request:
+```json
+{
+    "name": "Robert W.S.A",
+    "email": "robertskyrocket21@mail.com",
+    "birthday": "1990-02-14",
+    "timezone": "Asia/Dubai"
+}
+```
+
+Response (200 OK):
+```json
+{
+    "_id": "683948a3a079126a2e0a1e13",
+    "name": "Robert W.S.A",
+    "email": "robertskyrocket21@mail.com",
+    "birthday": "1990-02-14T00:00:00.000Z",
+    "timezone": "Asia/Dubai",
+    "createdAt": "2025-05-30T05:56:51.807Z",
+    "updatedAt": "2025-05-30T06:05:19.440Z",
+    "__v": 0
+}
+```
 
 - Same validation as `POST`
 - Returns 404 if not found
@@ -127,6 +180,13 @@ SIMULATED_TIME="2024-05-30T09:00:00+07:00" docker-compose up
 ---
 
 ### `DELETE /api/users/:id` — Delete a user
+
+Response (200 OK):
+```json
+{
+    "message": "User deleted successfully"
+}
+```
 
 - Returns 404 if not found
 
