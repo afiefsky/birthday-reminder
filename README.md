@@ -189,6 +189,25 @@ SIMULATED_TIME="2024-05-30T09:00:00+07:00" docker-compose up
 
 ---
 
+## Postman Collection
+
+You can use the provided Postman Collection (v2.1) to test the API endpoints easily.
+
+### Steps:
+
+1. Open Postman.  
+2. Click **Import** > **File**.  
+3. Select the file `birthday-reminder.postman_collection.json` from the project root.  
+4. After import, these requests are available:
+
+- `POST /api/users`
+- `GET /api/users/:_ID`
+- `PUT /api/users/:_ID`
+- `DELETE /api/users/:_ID`
+- `GET /api/users` (extra)
+
+---
+
 ## Future Improvements
 
 - Real email/firebase notifications
