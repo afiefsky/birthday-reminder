@@ -167,6 +167,7 @@ SIMULATED_TIME="2024-05-30T09:00:00+07:00" docker-compose up
    - Controllers → only call services
    - Services → contain business logic, can call models and third-party APIs
    - Models → contain data/domain logic only
+   - Worker → same behaviour as controller, it must not call model directly, instead call services first
 
 ---
 
