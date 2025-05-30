@@ -55,6 +55,7 @@ This starts both the API and MongoDB containers. All dependencies are automatica
 Tests are located in the `test` directory, organized by unit:
 
 ```bash
+npm install
 npm test -- --verbose
 ```
 
