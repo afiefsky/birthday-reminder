@@ -24,8 +24,9 @@ A service that manages user data and sends birthday reminders at 9 AM in users' 
 
 ## Setup
 
-1. Extract `birthday-reminder.zip`, then enter its root path:
+1. Clone this repo:
    ```bash
+   git clone https://github.com/afiefsky/birthday-reminder.git
    cd birthday-reminder
    ```
 
