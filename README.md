@@ -2,7 +2,7 @@
 
 A service that manages user data and sends birthday reminders at 9 AM in users' local timezones.
 
-> **Disclaimer**: This project is closed to only Afief (Author) and HubbedIn for Take Home Test. This project is not "blind helped" by AI, meaning that I take responsibility for every single line of code presented in this project. This project is meant to be run locally. If it's to be hosted, it would require further configuration and documentation update.
+> **Disclaimer**: This project is not "blind helped" by AI, meaning that I take responsibility for every single line of code presented in this project. This project is meant to be run locally. If it's to be hosted, it would require further configuration and documentation update.
 
 ---
 
